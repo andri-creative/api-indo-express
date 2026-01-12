@@ -1,0 +1,27 @@
+### GET
+GET http://localhost:8090
+
+### Login
+POST http://localhost:8090/api/v1/auth/google
+Content-Type: application/json
+
+
+### GET Provinsi
+GET http://localhost:8090/api/v1/provinces
+Content-Type: application/json
+Authorization: Bearer Y2U2MjU2NDBjNWY1ZmJiOTc5MTBhOTdjNjA3MDlmMzgyZWNkMjM1NzQ0NzZhNmRkOTYzYTE3MWExN2I2NDJjYw==
+
+### GET Kabupaten
+GET http://localhost:8090/api/v1/regencies?province_code=11
+Content-Type: application/json
+Authorization: Bearer MWFjZmNlYjk5YWY3MDg1YmI5NmE1NzJlNzljNWEwNzRlZjBlZTYxMDQxYWU1MDZkOTFlYWIyNWI2MzhhY2M3Zg==
+
+### GET Kecamatan
+GET http://localhost:8090/api/v1/districts?regency_code=1101
+Content-Type: application/json
+Authorization: Bearer MWFjZmNlYjk5YWY3MDg1YmI5NmE1NzJlNzljNWEwNzRlZjBlZTYxMDQxYWU1MDZkOTFlYWIyNWI2MzhhY2M3Zg==
+
+### GET Kelurahan
+GET http://localhost:8090/api/v1/villages?district_code=110101
+Content-Type: application/json
+Authorization: Bearer MWFjZmNlYjk5YWY3MDg1YmI5NmE1NzJlNzljNWEwNzRlZjBlZTYxMDQxYWU1MDZkOTFlYWIyNWI2MzhhY2M3Zg==

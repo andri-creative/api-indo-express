@@ -1,0 +1,175 @@
+# ========================================
+# Dependencies
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ========================================
+# Environment Variables
+# ========================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+
+# ========================================
+# Build Output
+# ========================================
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# ========================================
+# TypeScript
+# ========================================
+*.tsbuildinfo
+.tsbuildinfo
+
+# ========================================
+# Logs
+# ========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ========================================
+# OS Files
+# ========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ========================================
+# IDE / Editor
+# ========================================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# JetBrains (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# ========================================
+# Testing
+# ========================================
+coverage/
+.nyc_output/
+*.lcov
+.cache/
+
+# ========================================
+# Temporary Files
+# ========================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ========================================
+# Database
+# ========================================
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+mongodb/
+
+# ========================================
+# Secrets & Credentials
+# ========================================
+.env
+*.pem
+*.key
+*.cert
+*.crt
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
+# ========================================
+# Package Manager
+# ========================================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.yarn/
+.pnp.*
+
+# ========================================
+# Vercel
+# ========================================
+.vercel
+.now
+
+# ========================================
+# Next.js (if used)
+# ========================================
+.next/
+next-env.d.ts
+
+# ========================================
+# Misc
+# ========================================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.grunt
+
+# ========================================
+# Custom
+# ========================================
+# Add your custom ignores here
+uploads/
+*.bak
+*.backup
