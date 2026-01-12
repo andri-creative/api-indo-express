@@ -1,29 +1,29 @@
 import { Router } from "express";
+import { AuthController } from "../controllers/auth.controller";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import {
-  googleCallback,
-  googleTokenAuth,
-} from "../controllers/auth.controller";
-import passport from "passport";
-import { getAllUsers } from "../controllers/auth.controller";
+  getAllUsers,
+  getUserById,
+  deleteUser,
+} from "../controllers/getAuth.controller";
 
 const router = Router();
 
-// POST endpoint for Google token authentication (from frontend)
-router.post("/google", googleTokenAuth);
+// Public routes
+router.get("/google", AuthController.googleAuth);
+router.get("/google/callback", AuthController.googleAuthCallback);
 
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+// Protected routes
+router.get("/me", authMiddleware, AuthController.getCurrentUser);
+router.post("/logout", authMiddleware, AuthController.logout);
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { session: false }),
-  (req, res) => {
-    res.json({ message: "Login success", user: req.user });
-  }
-);
-
+// Admin routes - Get all users with their API keys
 router.get("/all", getAllUsers);
+
+// Admin routes - Get user by ID with API keys
+router.get("/:id", getUserById);
+
+// Admin routes - Delete user and all their API keys
+router.delete("/:id", deleteUser);
 
 export default router;

@@ -1,71 +1,77 @@
 import { Request, Response } from "express";
-import { GetAll, loginWithGoogle } from "../services/auth.service";
-import jwt from "jsonwebtoken";
+import passport from "passport";
+import { AuthService } from "../services/auth.service";
 
-export function googleCallback(req: Request, res: Response) {
-  res.json({
-    message: "Login success",
-    user: req.user,
-  });
-}
+export class AuthController {
+  static googleAuth(req: Request, res: Response) {
+    passport.authenticate("google", {
+      scope: ["profile", "email"],
+      session: false,
+    })(req, res);
+  }
 
-// Handle Google token from frontend
-export async function googleTokenAuth(req: Request, res: Response) {
-  try {
-    const { token: googleToken, email } = req.body;
+  static googleAuthCallback(req: Request, res: Response) {
+    passport.authenticate(
+      "google",
+      { session: false },
+      (err: Error, user: any) => {
+        if (err || !user) {
+          return res.redirect(
+            `${process.env.FRONTEND_URL}/login?error=auth_failed`
+          );
+        }
 
-    if (!googleToken) {
-      return res.status(400).json({
-        message: "Google token is required",
+        const token = AuthService.generateToken(user);
+
+        res.redirect(
+          `${process.env.FRONTEND_URL}/auth/callback?token=${token}`
+        );
+      }
+    )(req, res);
+  }
+
+  static async getCurrentUser(req: Request, res: Response) {
+    try {
+      const user = (req as any).user;
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized",
+        });
+      }
+
+      const { _id, email, name, photo, role } = user;
+
+      // Ambil API keys yang dimiliki user berdasarkan relasi userId
+      const { connectMongo } = await import("../config/mongo");
+      const db = await connectMongo();
+      const apiKeys = await db
+        .collection("api_keys")
+        .find({ userId: _id })
+        .toArray();
+
+      res.json({
+        success: true,
+        user: { _id, email, name, photo, role },
+        apiKeys: apiKeys.map((k) => ({
+          _id: k._id,
+          key: k.key,
+          createdAt: k.createdAt,
+        })),
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
       });
     }
-
-    // For demo purposes, we'll create a mock Google profile
-    // In production, you should verify the Google token with Google's API
-    // Use email from request if provided, otherwise use demo email
-    const userEmail = email || "demo@example.com";
-
-    const mockProfile = {
-      emails: [{ value: userEmail }],
-      displayName: "Demo User", // This will be overwritten if user exists in DB
-      photos: [{ value: "https://via.placeholder.com/150" }], // This will be overwritten if user exists in DB
-      id: "google_" + Date.now(),
-    };
-
-    // Use the existing loginWithGoogle service to save user and create API key
-    const { user, apiKeys } = await loginWithGoogle(mockProfile);
-
-    // Return the API key as token (this is what the frontend expects)
-    const apiKey = apiKeys && apiKeys.length > 0 ? apiKeys[0].key : null;
-
-    res.status(200).json({
-      token: apiKey,
-      user: {
-        name: user.name,
-        email: user.email,
-        picture: user.photo,
-      },
-    });
-  } catch (error) {
-    console.error("Google token auth error:", error);
-    res.status(500).json({
-      message: "Authentication failed",
-    });
   }
-}
 
-export async function getAllUsers(req: Request, res: Response) {
-  try {
-    const users = await GetAll();
-
-    res.status(200).json({
-      message: "Users found",
-      total: users.length,
-      users: users,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch users",
+  static logout(req: Request, res: Response) {
+    res.json({
+      success: true,
+      message: "Logged out successfully",
     });
   }
 }

@@ -1,31 +1,53 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/jwt";
+import { AuthService } from "../services/auth.service";
+import { connectMongo } from "../config/mongo";
+import { ObjectId } from "mongodb";
 
-export const authenticateJWT = (
+export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({
-      success: false,
-      message: "Authorization header missing",
-    });
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    (req as any).user = decoded;
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
+    }
+
+    // Verify token
+    const decoded = AuthService.verifyToken(token);
+
+    if (!decoded) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token",
+      });
+    }
+
+    // Get user from database
+    const usersCollection = (await connectMongo()).collection("users");
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(decoded._id),
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Attach user to request
+    (req as any).user = user;
     next();
-  } catch {
-    res.status(401).json({
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: "Invalid or expired token",
+      message: "Authentication error",
     });
   }
 };

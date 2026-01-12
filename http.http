@@ -25,3 +25,9 @@ Authorization: Bearer MWFjZmNlYjk5YWY3MDg1YmI5NmE1NzJlNzljNWEwNzRlZjBlZTYxMDQxYW
 GET http://localhost:8090/api/v1/villages?district_code=110101
 Content-Type: application/json
 Authorization: Bearer MWFjZmNlYjk5YWY3MDg1YmI5NmE1NzJlNzljNWEwNzRlZjBlZTYxMDQxYWU1MDZkOTFlYWIyNWI2MzhhY2M3Zg==
+
+### GET API PUBLIC
+GET https://api-indonesia-creative.vercel.app/api/v1/provinces
+
+### GET BY IDGET 
+DELETE http://localhost:8090/api/v1/auth/6963ecaa144b4ac33cf96a43
